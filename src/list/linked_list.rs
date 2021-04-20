@@ -38,23 +38,15 @@ pub struct SingleLinkedList<T> {
 
 impl<T> SingleLinkedList<T> {
     pub fn new() -> Self {
-        Self {
-            head: None,
-            len: 0,
-        }
+        Self { head: None, len: 0 }
     }
     /// 插入到最前面
     pub fn push(&mut self, ele: T) {
         let mut new_node: NonNull<Node<T>> = Box::leak(Node::new(ele)).into();
-        match self.head {
-            Some(node) => unsafe {
-                new_node.as_mut().next = Some(node);
-                self.head = Some(new_node);
-            },
-            None => {
-                self.head = Some(new_node);
-            }
+        unsafe {
+            new_node.as_mut().next = self.head;
         }
+        self.head = Some(new_node);
         self.len += 1;
     }
 }
