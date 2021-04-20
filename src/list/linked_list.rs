@@ -45,6 +45,22 @@ impl<T> SingleLinkedList<T> {
             len: 0,
         }
     }
+    /// 插入到最前面
+    pub fn push(&mut self, ele: T) {
+        let mut new_node: NonNull<Node<T>> = Box::leak(Node::new(ele)).into();
+        match self.head {
+            Some(node) => unsafe {
+                new_node.as_mut().next = Some(node);
+                self.head = Some(new_node);
+            },
+            None => {
+                self.head = Some(new_node);
+                self.tail = Some(new_node);
+            }
+        }
+        self.len += 1;
+    }
+    /// 插入到最后
     pub fn append(&mut self, ele: T) {
         let new_node = Some(Box::leak(Node::new(ele)).into());
         match self.tail {
@@ -54,6 +70,7 @@ impl<T> SingleLinkedList<T> {
             },
             None => {
                 self.head = new_node;
+                self.tail = new_node;
             }
         }
         self.len += 1;
