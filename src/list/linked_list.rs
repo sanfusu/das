@@ -49,4 +49,35 @@ impl<T> SingleLinkedList<T> {
         self.head = Some(new_node);
         self.len += 1;
     }
+
+    pub fn pop(&mut self) -> Option<T> {
+        if let Some(mut first) = self.head {
+            let node = unsafe {
+                self.head = first.as_ref().next;
+                Box::from_raw(first.as_mut())
+            };
+            self.len -= 1;
+            return Some(node.ele);
+        }
+        None
+    }
+}
+
+#[cfg(test)]
+mod test {
+
+    #[test]
+    fn sll_test() {
+        let mut list = super::SingleLinkedList::<u32>::new();
+        for i in 0..10 {
+            list.push(i);
+        }
+        println!("list length: {}", list.len);
+
+        while let Some(ele) = list.pop() {
+            print!("{} ", ele);
+        }
+
+        println!("list length: {}", list.len);
+    }
 }
