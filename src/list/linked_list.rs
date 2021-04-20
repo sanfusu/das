@@ -33,7 +33,6 @@ impl<T> Node<T> {
 
 pub struct SingleLinkedList<T> {
     head: Option<NonNull<Node<T>>>,
-    tail: Option<NonNull<Node<T>>>,
     len: usize,
 }
 
@@ -41,7 +40,6 @@ impl<T> SingleLinkedList<T> {
     pub fn new() -> Self {
         Self {
             head: None,
-            tail: None,
             len: 0,
         }
     }
@@ -55,22 +53,6 @@ impl<T> SingleLinkedList<T> {
             },
             None => {
                 self.head = Some(new_node);
-                self.tail = Some(new_node);
-            }
-        }
-        self.len += 1;
-    }
-    /// 插入到最后
-    pub fn append(&mut self, ele: T) {
-        let new_node = Some(Box::leak(Node::new(ele)).into());
-        match self.tail {
-            Some(mut node) => unsafe {
-                node.as_mut().next = new_node;
-                self.tail = node.as_ref().next;
-            },
-            None => {
-                self.head = new_node;
-                self.tail = new_node;
             }
         }
         self.len += 1;
